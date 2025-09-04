@@ -170,10 +170,7 @@ private:
       const juce::ParameterID& id, T& destination);
     
     //  Creates a layout over the editor's GUI, stacking parameters vertically.
-    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    
-    //  Object to make smooth transactions when parameters change
-    juce::LinearSmoothedValue<float> smoother;    
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();    
 
     /*  Macro that expands into:
           - non-copyable declaration avoiding unwanted copies of 
