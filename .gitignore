@@ -4,3 +4,4 @@ waveshaping_gain/
 white_noise_gain/
 fake_sidechain/
 */build/
+.vscode/
