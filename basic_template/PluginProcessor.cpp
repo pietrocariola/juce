@@ -201,11 +201,19 @@ juce::AudioProcessorEditor* BasicTemplateAudioProcessor::createEditor()
 
 void BasicTemplateAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    copyXmlToBinary(*apvts.copyState().createXml(), destData);
 }
 
 void BasicTemplateAudioProcessor::setStateInformation (const void* data, 
     int sizeInBytes)
 {
+    std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary(data, sizeInBytes));
+
+    if (xml.get() != nullptr && xml->hasTagName(apvts.state.getType())) 
+    {
+        apvts.replaceState(juce::ValueTree::fromXml(*xml));
+        parametersChanged.store(true);
+    }
 }
 
 // This creates new instances of the plugin.
