@@ -2,4 +2,5 @@ audio_player/
 tutorial_plugin/
 waveshaping_gain/
 white_noise_gain/
+fake_sidechain/
 */build/
