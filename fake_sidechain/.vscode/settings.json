@@ -1,15 +1,17 @@
 {
     "files.associations": {
-        "chrono": "cpp",
-        "sstream": "cpp",
-        "memory": "cpp",
         "algorithm": "cpp",
+        "format": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xutility": "cpp",
         "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
         "bitset": "cpp",
         "cctype": "cpp",
         "charconv": "cpp",
+        "chrono": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
         "codecvt": "cpp",
@@ -30,7 +32,6 @@
         "deque": "cpp",
         "exception": "cpp",
         "filesystem": "cpp",
-        "format": "cpp",
         "forward_list": "cpp",
         "fstream": "cpp",
         "functional": "cpp",
@@ -46,6 +47,7 @@
         "list": "cpp",
         "locale": "cpp",
         "map": "cpp",
+        "memory": "cpp",
         "mutex": "cpp",
         "new": "cpp",
         "numeric": "cpp",
@@ -57,6 +59,7 @@
         "shared_mutex": "cpp",
         "source_location": "cpp",
         "span": "cpp",
+        "sstream": "cpp",
         "stdexcept": "cpp",
         "stop_token": "cpp",
         "streambuf": "cpp",
@@ -74,8 +77,6 @@
         "vector": "cpp",
         "xfacet": "cpp",
         "xhash": "cpp",
-        "xiosbase": "cpp",
-        "xlocale": "cpp",
         "xlocbuf": "cpp",
         "xlocinfo": "cpp",
         "xlocmes": "cpp",
@@ -85,7 +86,7 @@
         "xmemory": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xtree": "cpp",
-        "xutility": "cpp"
-    }
+        "xtree": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
