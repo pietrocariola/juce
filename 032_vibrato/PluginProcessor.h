@@ -3,7 +3,9 @@
 //==============================================================================
 
 #pragma once
+#ifdef __GNUC__
 #pragma GCC diagnostic ignored "-Woverloaded-virtual=1"
+#endif
 
 #define _USE_MATH_DEFINES
 
@@ -121,8 +123,8 @@ private:
     int delayBufferLength_;
     int delayWritePosition_;
 
-    double sampleRate_;
-    double inverseSampleRate_;
+    float sampleRate_;
+    float inverseSampleRate_;
     float lfoPhase_;
 
     juce::AudioParameterFloat* frequencyParam;  // LFO Frequency

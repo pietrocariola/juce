@@ -17,11 +17,15 @@ cmake_minimum_required(VERSION 3.22)
 # TODO: Nome e versão do plugin
 project(FlangerPlugin VERSION 0.0.1)
 
-# TODO: Caminho de instalacao do JUCE
-#windows
-#list(APPEND CMAKE_PREFIX_PATH "C:/JUCE/install") 
-# macos/linux
-list(APPEND CMAKE_PREFIX_PATH "~/JUCE") 
+# Caminho de instalacao do JUCE
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message("Building on Windows")
+	list(APPEND CMAKE_PREFIX_PATH "C:/install/JUCE")
+else()
+    message("Building on Unix-like system")
+	list(APPEND CMAKE_PREFIX_PATH "~/JUCE") 
+endif()
+
 
 # Adiciona dependencias do JUCE ao projeto
 find_package(JUCE CONFIG REQUIRED)

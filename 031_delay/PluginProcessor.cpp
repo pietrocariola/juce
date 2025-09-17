@@ -75,7 +75,10 @@ void MyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     
     const int numSamples = buffer.getNumSamples();
-    int dpr, dpw; // dpr = delay read pointer; dpw = delay write pointer
+    
+    // dpr = delay read pointer; dpw = delay write pointer
+    int dpr = 0;
+    int dpw = 0;
     
     // clears any output channels that didn't contain input data
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)

@@ -19,18 +19,9 @@ MyAudioProcessor::MyAudioProcessor()
     interpolation_ = Interpolation::Linear;
     
     // Set default values:
-    sweepWidth_ = .001;
-    frequency_ = 2.0;
-    
-    sampleRate_ = getSampleRate();
-    
-    delayBufferLength_ = 1;
-    lfoPhase_ = 0.0;
-    inverseSampleRate_ = 1.0/sampleRate_;
-    
-    // Start the circular buffer pointer at the beginning
-    delayWritePosition_ = 0;
-    
+    sweepWidth_ = 0.001f;
+    frequency_ = 2.0f;
+        
     castParameter(apvts, ParamID::frequency, frequencyParam);
     castParameter(apvts, ParamID::sweepWidth, sweepWidthParam);
     castParameter(apvts, ParamID::interpolationType, interpolationTypeParam);
@@ -55,14 +46,23 @@ MyAudioProcessor::~MyAudioProcessor()
 void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     juce::ignoreUnused(samplesPerBlock); 
 
+    sampleRate_ = (float)getSampleRate();
+    
+    delayBufferLength_ = 1;
+    lfoPhase_ = 0.0;
+    inverseSampleRate_ = 1.0f/sampleRate_;
+    
+    // Start the circular buffer pointer at the beginning
+    delayWritePosition_ = 0;
+
     delayBufferLength_ = (int)(0.05*sampleRate) + 3;
     delayBuffer_.setSize(2, delayBufferLength_);
     delayBuffer_.clear();
 
-    frequencySmoother.reset(sampleRate, 0.05);
+    frequencySmoother.reset(sampleRate_, 0.05);
     
     lfoPhase_ = 0.0;
-    inverseSampleRate_ = 1.0/sampleRate;
+    inverseSampleRate_ = 1.0f/sampleRate_;
     
     parametersChanged.store(true);
     reset();
@@ -79,8 +79,10 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     
     const int numSamples = buffer.getNumSamples();
-    int dpw;
-    float dpr, currentDelay, ph;
+    int dpw = 0;
+    float dpr = 0;
+    float currentDelay = 0;
+    float ph = 0;
     
     // clears any output channels that didn't contain input data
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
@@ -105,13 +107,13 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         for (int i = 0; i < numSamples; ++i)
         {
             const float in = channelData[i];
-            float interpolatedSample = 0.0;
+            float interpolatedSample = 0.0f;
             
             currentDelay = sweepWidth_ * lfo(ph);
             
             // Subtract 3 samples to the delay pointer to make sure we have enough previously written
             // samples to interpolate with
-            dpr = fmodf((float)dpw - (float)(currentDelay * getSampleRate()) + (float)delayBufferLength_ - 3.0,
+            dpr = fmodf((float)dpw - (float)(currentDelay * sampleRate_) + (float)delayBufferLength_ - 3.0f,
                         (float)delayBufferLength_);
             
             if (interpolation_ == Interpolation::Linear)
@@ -149,7 +151,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
                 // Find the nearest input sample by rounding the fractional index to the
                 // nearest integer. It's possible this will round it to the end of the buffer,
                 // in which case we need to roll it back to the beginning.
-                int closestSample = (int)floorf(dpr + 0.5);
+                int closestSample = (int)floorf(dpr + 0.5f);
                 if(closestSample == delayBufferLength_)
                     closestSample = 0;
                 interpolatedSample = delayData[closestSample];
@@ -194,7 +196,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
 // from 0 to 1 (note: not -1 to 1 as would be typical of sine).
 float MyAudioProcessor::lfo(float phase)
 {
-    return 0.5f + 0.5f * sinf(2.0 * M_PI * phase);
+    return 0.5f + 0.5f * sinf(2.0f * (float)M_PI * phase);
 }
 
 // chamada logo DEPOIS de processar

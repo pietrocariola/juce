@@ -59,14 +59,16 @@ MyAudioProcessor::~MyAudioProcessor()
 void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     juce::ignoreUnused(samplesPerBlock); 
 
+    sampleRate_ = (float)sampleRate;
+
     delayBufferLength_ = (int)((MAX_DELAY + MAX_SWEEP_WIDTH) * sampleRate) + 3;
     delayBuffer_.setSize(2, delayBufferLength_);
     delayBuffer_.clear();
 
-    frequencySmoother.reset(sampleRate, 0.05);
+    frequencySmoother.reset(sampleRate_, 0.05f);
     
-    lfoPhase_ = 0.0;
-    inverseSampleRate_ = 1.0/sampleRate;
+    lfoPhase_ = 0.0f;
+    inverseSampleRate_ = 1.0f/sampleRate_;
     
     parametersChanged.store(true);
     reset();
@@ -83,8 +85,10 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     
     const int numSamples = buffer.getNumSamples();
-    int dpw;
-    float dpr, currentDelay, ph;
+    int dpw = 0;
+    float dpr = 0.0f;
+    float currentDelay = 0.0f;
+    float ph = 0.0f;
     
     // clears any output channels that didn't contain input data
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
@@ -152,7 +156,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
                 // Find the nearest input sample by rounding the fractional index to the
                 // nearest integer. It's possible this will round it to the end of the buffer,
                 // in which case we need to roll it back to the beginning.
-                int closestSample = (int)floorf(dpr + 0.5);
+                int closestSample = (int)floorf(dpr + 0.5f);
                 if(closestSample == delayBufferLength_)
                     closestSample = 0;
                 interpolatedSample = delayData[closestSample];
@@ -197,7 +201,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
 // from 0 to 1 (note: not -1 to 1 as would be typical of sine).
 float MyAudioProcessor::lfo(float phase)
 {
-    return 0.5f + 0.5f * sinf(2.0 * M_PI * phase);
+    return 0.5f + 0.5f * sinf(2.0f * (float)M_PI * phase);
 }
 
 // chamada logo DEPOIS de processar

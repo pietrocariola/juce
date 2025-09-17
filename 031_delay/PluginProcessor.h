@@ -3,7 +3,9 @@
 //==============================================================================
 
 #pragma once
+#ifdef __GNUC__
 #pragma GCC diagnostic ignored "-Woverloaded-virtual=1"
+#endif
 
 #define _USE_MATH_DEFINES
 

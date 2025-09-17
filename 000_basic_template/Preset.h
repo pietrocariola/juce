@@ -12,7 +12,7 @@ struct Preset
 {
     Preset(const char* pname,  std::initializer_list<float> param_list)
     {
-        strcpy(this->name, pname);
+        strcpy_s(this->name, sizeof this->name, pname);
         param = param_list;
     }
 
