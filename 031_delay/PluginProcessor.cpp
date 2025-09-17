@@ -15,21 +15,7 @@ MyAudioProcessor::MyAudioProcessor()
         .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
         delayBuffer_(2, 1)
 {
-    //TODO: inicializacao dos parametros do plugin
-    
-    // Ponteiros para o buffer circular
-    delayReadPosition_ = 0;
-    delayWritePosition_ = 0;
-
-    sampleRate_ = getSampleRate();
-    
-    // Aloca e zera o buffer de delay
-    delayBufferLength_ = (int)(2.0 * sampleRate_); //delay maximo == 2s
-
-    // Checa resultado da alocacao para evitar buffer de tamanho zero
-    if(delayBufferLength_ < 1)
-        delayBufferLength_ = 1;
-    
+    //TODO: inicializacao dos parametros do plugin    
     castParameter(apvts, ParamID::delayLength, delayLengthParam);
     castParameter(apvts, ParamID::dryMix, dryMixParam);
     castParameter(apvts, ParamID::wetMix, wetMixParam);
@@ -55,11 +41,24 @@ MyAudioProcessor::~MyAudioProcessor()
 void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     juce::ignoreUnused(samplesPerBlock); 
 
+    // Ponteiros para o buffer circular
+    delayReadPosition_ = 0;
+    delayWritePosition_ = 0;
+
+    sampleRate_ = getSampleRate();
+
+    // Aloca e zera o buffer de delay
+    delayBufferLength_ = (int)(2.0 * sampleRate_); //delay maximo == 2s
+
+    // Checa resultado da alocacao para evitar buffer de tamanho zero
+    if(delayBufferLength_ < 1)
+        delayBufferLength_ = 1;
+
     delayBuffer_.setSize(2, delayBufferLength_);
     delayBuffer_.clear();
 
     delayLengthSmoother.reset(sampleRate, 0.05);
-    
+
     parametersChanged.store(true);
     reset();
 }

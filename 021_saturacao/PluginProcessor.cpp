@@ -146,7 +146,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 // TODO: Cria presets iniciais
 void MyAudioProcessor::createPrograms()
 {
-    presets.emplace_back(Preset("Tanh shaping", {1.0f, 0.0f}));
+    presets.emplace_back(Preset("Tanh shaping", {1.0f, 0}));
     
     //TODO: EXERCICIO - adicionar presets para as novas funcoes
     //presets.emplace_back(Preset("Soft-clipping distortion", {1.0f, 1}));
@@ -160,7 +160,8 @@ void MyAudioProcessor::setCurrentProgram (int index)
     currentProgram = index;
     
     juce::RangedAudioParameter *params[NUM_PARAMS] = {
-        gainParam
+        gainParam,
+        waveshapingFuncParam
     };
 
     const Preset& preset = presets[(unsigned int)index];
