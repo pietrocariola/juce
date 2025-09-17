@@ -5,6 +5,8 @@
 #pragma once
 #pragma GCC diagnostic ignored "-Woverloaded-virtual=1"
 
+#define _USE_MATH_DEFINES
+
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include <atomic>
@@ -17,7 +19,7 @@
 // Para adicionar um parametro, adicionar uma nova linha PARAMETER_ID(<nome_parametro>)
 // dentro do bloco #define/#undef
 
-namespace ParameterID {
+namespace ParamID {
     #define PARAMETER_ID(str) const juce::ParameterID str(#str, 1);
     PARAMETER_ID(delay)      // tamanho do delay
     PARAMETER_ID(sweepWidth) // amplitude do LFO em amostras

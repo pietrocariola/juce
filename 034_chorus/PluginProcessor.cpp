@@ -32,12 +32,12 @@ MyAudioProcessor::MyAudioProcessor()
     // Start the circular buffer pointer at the beginning
     delayWritePosition_ = 0;
     
-    castParameter(apvts, ParameterID::delay, delayParam);
-    castParameter(apvts, ParameterID::sweepWidth, sweepWidthParam);
-    castParameter(apvts, ParameterID::depth, depthParam);
-    castParameter(apvts, ParameterID::numVoices, numVoicesParam);
-    castParameter(apvts, ParameterID::frequency, frequencyParam);
-    castParameter(apvts, ParameterID::interpolationType, interpolationTypeParam);
+    castParameter(apvts, ParamID::delay, delayParam);
+    castParameter(apvts, ParamID::sweepWidth, sweepWidthParam);
+    castParameter(apvts, ParamID::depth, depthParam);
+    castParameter(apvts, ParamID::numVoices, numVoicesParam);
+    castParameter(apvts, ParamID::frequency, frequencyParam);
+    castParameter(apvts, ParamID::interpolationType, interpolationTypeParam);
 
     apvts.state.addListener(this);
     
@@ -238,32 +238,32 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::delay,
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::delay,
                                                            "Delay (ms)",
                                                            juce::NormalisableRange(0.01f, 0.05f, 0.001f),
                                                            0.03f));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::sweepWidth,
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::sweepWidth,
                                                            "Sweep Width",
                                                            juce::NormalisableRange(0.01f, 0.05f, 0.001f),
                                                            0.02f));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::depth,
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::depth,
                                                            "Depth",
                                                            juce::NormalisableRange(0.0f, 1.0f, 0.01f),
                                                            1.0f));
 
-    layout.add(std::make_unique<juce::AudioParameterChoice>(ParameterID::numVoices,
+    layout.add(std::make_unique<juce::AudioParameterChoice>(ParamID::numVoices,
                                                             "Voices",
                                                             juce::StringArray { "2", "3", "4", "5"},
                                                             0));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::frequency,
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::frequency,
                                                            "Frequency (Hz)",
                                                            juce::NormalisableRange(0.05f, 2.0f, 0.025f),
                                                            0.2f));
     
-    layout.add(std::make_unique<juce::AudioParameterChoice>(ParameterID::interpolationType,
+    layout.add(std::make_unique<juce::AudioParameterChoice>(ParamID::interpolationType,
                                                             "Interpolation",
                                                             juce::StringArray { "Nearest Neighbor", "Linear", "Cubic" },
                                                             0));

@@ -30,10 +30,10 @@ MyAudioProcessor::MyAudioProcessor()
     if(delayBufferLength_ < 1)
         delayBufferLength_ = 1;
     
-    castParameter(apvts, ParameterID::delayLength, delayLengthParam);
-    castParameter(apvts, ParameterID::dryMix, dryMixParam);
-    castParameter(apvts, ParameterID::wetMix, wetMixParam);
-    castParameter(apvts, ParameterID::feedback, feedbackParam);
+    castParameter(apvts, ParamID::delayLength, delayLengthParam);
+    castParameter(apvts, ParamID::dryMix, dryMixParam);
+    castParameter(apvts, ParamID::wetMix, wetMixParam);
+    castParameter(apvts, ParamID::feedback, feedbackParam);
 
     apvts.state.addListener(this);
     
@@ -164,19 +164,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
     
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::delayLength,
+        ParamID::delayLength,
         "Delay Time (s)", 0.0f, 2.0f, 0.5f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::dryMix,
+        ParamID::dryMix,
         "Dry", 0.0f, 1.0f, 1.0f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::wetMix,
+        ParamID::wetMix,
         "Wet", 0.0f, 1.0f, 0.5f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::feedback,
+        ParamID::feedback,
         "Feedback", 0.0f, 1.0f, 0.1f));
     
     return layout;

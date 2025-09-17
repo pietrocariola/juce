@@ -19,9 +19,9 @@ MyAudioProcessor::MyAudioProcessor()
     Q_ = 1.0f;
     gain_ = 1.0f;
 
-    castParameter(apvts, ParameterID::freq, freqParam);
-    castParameter(apvts, ParameterID::Q, qParam);
-    castParameter(apvts, ParameterID::gain, gainParam);
+    castParameter(apvts, ParamID::freq, freqParam);
+    castParameter(apvts, ParamID::Q, qParam);
+    castParameter(apvts, ParamID::gain, gainParam);
 
     apvts.state.addListener(this);
     
@@ -105,21 +105,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::freq,
+        ParamID::freq,
         "Cutoff Frequency",
         20.0f,
         20000.0f, 
         1000.0f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::Q,
+        ParamID::Q,
         "Q",
         0.1f,
         100.0f, 
         1.0f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        ParameterID::gain,
+        ParamID::gain,
         "Gain",
         -100.0f,
         100.0f, 

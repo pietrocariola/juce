@@ -5,6 +5,8 @@
 #pragma once
 #pragma GCC diagnostic ignored "-Woverloaded-virtual=1"
 
+#define _USE_MATH_DEFINES
+
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include <atomic>

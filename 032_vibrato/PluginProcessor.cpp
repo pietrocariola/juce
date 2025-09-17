@@ -31,9 +31,9 @@ MyAudioProcessor::MyAudioProcessor()
     // Start the circular buffer pointer at the beginning
     delayWritePosition_ = 0;
     
-    castParameter(apvts, ParameterID::frequency, frequencyParam);
-    castParameter(apvts, ParameterID::sweepWidth, sweepWidthParam);
-    castParameter(apvts, ParameterID::interpolationType, interpolationTypeParam);
+    castParameter(apvts, ParamID::frequency, frequencyParam);
+    castParameter(apvts, ParamID::sweepWidth, sweepWidthParam);
+    castParameter(apvts, ParamID::interpolationType, interpolationTypeParam);
 
     apvts.state.addListener(this);
     
@@ -217,15 +217,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
     
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::frequency,
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::frequency,
                                                            "Frequency (Hz)", 0.0f, 20.0f, 6.0f));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParameterID::sweepWidth,
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::sweepWidth,
                                                            "Sweep Width",
-                                                           juce::NormalisableRange<float>(0.001f, 0.05f, 0.0005f),
+                                                           juce::NormalisableRange(0.001f, 0.05f, 0.0005f),
                                                            0.0f));
     
-    layout.add(std::make_unique<juce::AudioParameterChoice>(ParameterID::interpolationType,
+    layout.add(std::make_unique<juce::AudioParameterChoice>(ParamID::interpolationType,
                                                             "Interpolation",
                                                             juce::StringArray { "Nearest Neighbor", "Linear", "Cubic" },
                                                             0));

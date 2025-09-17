@@ -5,6 +5,8 @@
 #pragma once
 #pragma GCC diagnostic ignored "-Woverloaded-virtual=1"
 
+#define _USE_MATH_DEFINES
+
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
@@ -19,7 +21,7 @@
 // Para adicionar um parametro, adicionar uma nova linha PARAMETER_ID(<nome_parametro>)
 // dentro do bloco #define/#undef
 
-namespace ParameterID {
+namespace ParamID {
     #define PARAMETER_ID(str) const juce::ParameterID str(#str, 1);
     PARAMETER_ID(freq)
     PARAMETER_ID(Q)

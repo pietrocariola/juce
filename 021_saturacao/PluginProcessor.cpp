@@ -123,7 +123,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         ParamID::gain,
         "Gain",
-        juce::NormalisableRange(0.0f, 2.0f), 1.0f));
+        juce::NormalisableRange(0.0f, 2.0f),
+        1.0f));
 
     layout.add(std::make_unique<juce::AudioParameterChoice>(
         //nome do parametro
@@ -145,7 +146,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 // TODO: Cria presets iniciais
 void MyAudioProcessor::createPrograms()
 {
-    presets.emplace_back(Preset("Tanh shaping", {1.0f, 0}));
+    presets.emplace_back(Preset("Tanh shaping", {1.0f, 0.0f}));
     
     //TODO: EXERCICIO - adicionar presets para as novas funcoes
     //presets.emplace_back(Preset("Soft-clipping distortion", {1.0f, 1}));
