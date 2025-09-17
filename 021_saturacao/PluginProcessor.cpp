@@ -28,6 +28,9 @@ MyAudioProcessor::MyAudioProcessor()
     //hard-clipping
     //return std::max<float>(std::min<float>(x, 0.5), -0.5)
 
+    //cubic waveshaping: [](float x) { return x - (1.0f / 3.0f) * x * x * x; };
+    //asymmetrical waveshaping: float threshold = 1.0f; [threshold](float x) { return x < -threshold ? std::sin(x * (M_PI / (2.0f * threshold))) : std::min(x, threshold); };
+
     // Primeira funcao da lista como default
     shapingFunc = shapingFunctions[0];
 
