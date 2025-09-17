@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstring>
+#include <string>
 #include <initializer_list>
 #include <vector>
 
@@ -10,12 +10,11 @@
 
 struct Preset
 {
-    Preset(const char* pname,  std::initializer_list<float> param_list)
+    Preset(const char* pname,  std::initializer_list<float> param_list) : name(pname, 40)
     {
-        strcpy_s(this->name, sizeof this->name, pname);
         param = param_list;
     }
 
-    char name[40];
+    std::string name;
     std::vector<float> param;
 };
