@@ -3,7 +3,7 @@
 #include "Common.h"
 
 // TODO: Quantidade de parametros
-const long unsigned int NUM_PARAMS = 6;
+const long unsigned int NUM_PARAMS = 5;
 
 //==============================================================================
 // Construtor e destrutor
@@ -17,7 +17,6 @@ MyAudioProcessor::MyAudioProcessor()
 {
     //TODO: inicializacao dos parametros do plugin
     // Set default values:
-    delay_ = 0.0025f;
     sweepWidth_ = 0.01f;
     depth_ = 1.0f;
     feedback_ = 0.0f;
@@ -31,8 +30,7 @@ MyAudioProcessor::MyAudioProcessor()
         
     // Start the circular buffer pointer at the beginning
     delayWritePosition_ = 0;
-    
-    castParameter(apvts, ParamID::delay, delayParam);
+
     castParameter(apvts, ParamID::sweepWidth, sweepWidthParam);
     castParameter(apvts, ParamID::depth, depthParam);
     castParameter(apvts, ParamID::feedback, feedbackParam);
@@ -115,7 +113,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             const float in = channelData[i];
             float interpolatedSample = 0.0;
             
-            currentDelay = delay_ + sweepWidth_ * lfo(ph);
+            currentDelay = sweepWidth_ * lfo(ph);
             
             // Subtract 3 samples to the delay pointer to make sure we have enough previously written
             // samples to interpolate with
@@ -211,7 +209,6 @@ void MyAudioProcessor::releaseResources() {}
 void MyAudioProcessor::update() {
     frequencySmoother.setCurrentAndTargetValue(frequencyParam->get());
 
-    delay_ = delayParam->get();
     frequency_ = frequencySmoother.getNextValue();
     sweepWidth_ = sweepWidthParam->get();
     interpolation_ = static_cast<Interpolation>(interpolationTypeParam->getIndex());
@@ -226,11 +223,6 @@ void MyAudioProcessor::update() {
 juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
-
-    layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::delay,
-                                                           "Delay (ms)",
-                                                           juce::NormalisableRange(0.001f, 0.02f, 0.0005f),
-                                                           0.0025f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::sweepWidth,
                                                            "Sweep Width",
@@ -276,7 +268,6 @@ void MyAudioProcessor::setCurrentProgram (int index)
     currentProgram = index;
     
     juce::RangedAudioParameter *params[NUM_PARAMS] = {
-        delayParam,
         sweepWidthParam,
         depthParam,
         feedbackParam,

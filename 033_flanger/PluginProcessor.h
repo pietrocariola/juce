@@ -23,7 +23,6 @@
 
 namespace ParamID {
     #define PARAMETER_ID(str) const juce::ParameterID str(#str, 1);
-    PARAMETER_ID(delay)      // tamanho do delay
     PARAMETER_ID(sweepWidth) // amplitude do LFO em amostras
     PARAMETER_ID(depth)      //quantidade do sinal wet misturado com dry [0, 1)
     PARAMETER_ID(feedback)   // quantidade de feedback [0, 1)
@@ -90,7 +89,6 @@ public:
     //==============================================================================
     // TODO: Parametros ajustaveis do plugin:
     //------------------------------------------------------------------------------
-    float delay_;
     float sweepWidth_;
     float depth_;
     float feedback_;
@@ -138,7 +136,6 @@ private:
     float inverseSampleRate_;
     float lfoPhase_;
 
-    juce::AudioParameterFloat* delayParam;
     juce::AudioParameterFloat* sweepWidthParam;
     juce::AudioParameterFloat* depthParam;
     juce::AudioParameterFloat* feedbackParam;
