@@ -95,8 +95,7 @@ public:
     float frequency_;
     Interpolation interpolation_;
     
-    const float MAX_DELAY = 0.02f;
-    const float MAX_SWEEP_WIDTH = 0.02f;
+    const float MAX_SWEEP_WIDTH = 0.0205f;
     const float DEFAULT_SAMPLE_RATE = 44100.0f;
 
 private:

@@ -59,7 +59,7 @@ void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
 
     sampleRate_ = (float)sampleRate;
 
-    delayBufferLength_ = (int)((MAX_DELAY + MAX_SWEEP_WIDTH) * sampleRate) + 3;
+    delayBufferLength_ = (int)(MAX_SWEEP_WIDTH * sampleRate) + 3;
     delayBuffer_.setSize(2, delayBufferLength_);
     delayBuffer_.clear();
 
@@ -117,7 +117,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             
             // Subtract 3 samples to the delay pointer to make sure we have enough previously written
             // samples to interpolate with
-            dpr = fmodf((float)dpw - (float)(currentDelay * getSampleRate()) + (float)delayBufferLength_, (float)delayBufferLength_);
+            dpr = fmodf((float)dpw - (float)(currentDelay * getSampleRate()) + (float)delayBufferLength_ -3.0f, (float)delayBufferLength_);
             
             if (interpolation_ == Interpolation::Linear)
             {
@@ -226,7 +226,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::sweepWidth,
                                                            "Sweep Width",
-                                                           juce::NormalisableRange(0.001f, 0.2f,0.0005f),
+                                                           juce::NormalisableRange(0.001f, MAX_SWEEP_WIDTH - 0.0005f    , 0.0005f),
                                                            0.01f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(ParamID::depth,
@@ -259,7 +259,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 // TODO: Cria presets iniciais
 void MyAudioProcessor::createPrograms()
 {
-    presets.emplace_back(Preset("default flanger", {0.0025f, 0.01f, 1.0f, 0.0f, 0.2f, 1}));
+    presets.emplace_back(Preset("default flanger", {0.01f, 1.0f, 0.0f, 0.2f, 1}));
 }
 
 // TODO: Define preset atual
