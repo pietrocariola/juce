@@ -123,7 +123,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         ParamID::gain,
         "Gain",
-        juce::NormalisableRange(0.0f, 2.0f),
+        juce::NormalisableRange(0.0f, 20.0f),
         1.0f));
 
     layout.add(std::make_unique<juce::AudioParameterChoice>(
