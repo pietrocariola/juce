@@ -113,7 +113,10 @@ private:
     //==============================================================================
     // TODO: Detalhes especificos deste plugin
     //------------------------------------------------------------------------------
-    juce::dsp::ProcessorChain<juce::dsp::IIR::Filter<float>> filterChain;
+    void setCoeffs();
+    
+    juce::dsp::ProcessorChain<juce::dsp::IIR::Filter<float>> filterChainL;
+    juce::dsp::ProcessorChain<juce::dsp::IIR::Filter<float>> filterChainR;
 
     juce::dsp::IIR::Coefficients<float>::Ptr midPeakCoeff;
 

@@ -15,9 +15,9 @@ MyAudioProcessor::MyAudioProcessor()
         .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
 {
     //TODO: inicializacao dos parametros do plugin
-    freq_ = 20000.0f;
+    freq_ = 1000.0f;
     Q_ = 1.0f;
-    gain_ = 1.0f;
+    gain_ = 0.0f;
 
     castParameter(apvts, ParamID::freq, freqParam);
     castParameter(apvts, ParamID::Q, qParam);
@@ -44,13 +44,18 @@ void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = (unsigned int)samplesPerBlock;
-    spec.numChannels = (unsigned int)getTotalNumOutputChannels();
+    spec.numChannels = 1; //(unsigned int)getTotalNumOutputChannels();
 
-    filterChain.prepare(spec);
+    filterChainL.prepare(spec);
+    filterChainR.prepare(spec);
+}
 
+void MyAudioProcessor::setCoeffs()
+{
     // Configurando os coeficientes do filtro
-    midPeakCoeff = juce::dsp::IIR::Coefficients<float>::makePeakFilter(getSampleRate(), freq_, Q_, gain_);
-    *filterChain.get<0>().coefficients = *midPeakCoeff;
+    midPeakCoeff = juce::dsp::IIR::Coefficients<float>::makePeakFilter(getSampleRate(), freq_, Q_, juce::Decibels::decibelsToGain(gain_));
+    *filterChainL.get<0>().coefficients = *midPeakCoeff;
+    *filterChainR.get<0>().coefficients = *midPeakCoeff;
 }
 
 // TODO: funcao que processa audio em loop - AUDIO THREAD!!!
@@ -69,8 +74,12 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         buffer.clear (i, 0, buffer.getNumSamples());
     
     juce::dsp::AudioBlock<float> block(buffer);
-    juce::dsp::ProcessContextReplacing<float> context(block);
-    filterChain.process(context);
+
+    auto blockL = block.getSingleChannelBlock(0);
+    filterChainL.process(juce::dsp::ProcessContextReplacing<float>(blockL));
+
+    auto blockR = block.getSingleChannelBlock(1);
+    filterChainR.process(juce::dsp::ProcessContextReplacing<float>(blockR));
 
     //valueTreePropertyChanged altera variavel parametersChanged quando algum parametro muda
     bool expected = true;
@@ -93,7 +102,7 @@ void MyAudioProcessor::update() {
     smoother.setCurrentAndTargetValue(gainParam->get());
     gain_ = gainParam->get();
 
-    *filterChain.get<0>().coefficients = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(getSampleRate(), freq_, Q_, gain_);
+    setCoeffs();
 }
 
 //==============================================================================
@@ -107,23 +116,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         ParamID::freq,
         "Cutoff Frequency",
-        20.0f,
-        20000.0f, 
+        juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.5f),
         1000.0f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         ParamID::Q,
         "Q",
-        0.1f,
-        100.0f, 
+        juce::NormalisableRange<float>(0.1f, 20.0f, 0.0f, 0.3f), 
         1.0f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         ParamID::gain,
         "Gain",
-        -100.0f,
-        100.0f, 
-        1.0f));
+        -50.0f,
+        50.0f, 
+        0.0f));
 
 
     return layout;
@@ -136,7 +143,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
 // TODO: Cria presets iniciais
 void MyAudioProcessor::createPrograms()
 {
-    presets.emplace_back(Preset("20 kHz", {20000.0f, 1.0f, 1.0f}));
+    presets.emplace_back(Preset("Scoop 1000 kHz", {1000.0f, 1.0f, -10.0f}));
 }
 
 // TODO: Define preset atual
