@@ -137,7 +137,13 @@ private:
         juce::dsp::IIR::Filter<float>,
         juce::dsp::IIR::Filter<float>,
         juce::dsp::IIR::Filter<float>,
-        juce::dsp::IIR::Filter<float>> filterChain;
+        juce::dsp::IIR::Filter<float>> filterChainL;
+
+    juce::dsp::ProcessorChain<
+        juce::dsp::IIR::Filter<float>,
+        juce::dsp::IIR::Filter<float>,
+        juce::dsp::IIR::Filter<float>,
+        juce::dsp::IIR::Filter<float>> filterChainR;
 
     juce::dsp::IIR::Coefficients<float>::Ptr lowShelfCoeff;
     juce::dsp::IIR::Coefficients<float>::Ptr midPeak1Coeff;

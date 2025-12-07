@@ -67,9 +67,10 @@ void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = (unsigned int)samplesPerBlock;
-    spec.numChannels = (unsigned int)getTotalNumOutputChannels();
+    spec.numChannels = 1; //(unsigned int)getTotalNumOutputChannels();
 
-    filterChain.prepare(spec);
+    filterChainL.prepare(spec);
+    filterChainR.prepare(spec);
 
     setCoeffs();
 }
@@ -90,8 +91,12 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
         buffer.clear (i, 0, buffer.getNumSamples());
     
     juce::dsp::AudioBlock<float> block(buffer);
-    juce::dsp::ProcessContextReplacing<float> context(block);
-    filterChain.process(context);
+
+    auto blockL = block.getSingleChannelBlock(0);
+    filterChainL.process(juce::dsp::ProcessContextReplacing<float>(blockL));
+    
+    auto blockR = block.getSingleChannelBlock(1);
+    filterChainR.process(juce::dsp::ProcessContextReplacing<float>(blockR));
 
     //valueTreePropertyChanged altera variavel parametersChanged quando algum parametro muda
     bool expected = true;
@@ -152,10 +157,15 @@ void MyAudioProcessor::setCoeffs() //AUDIO THREAD!!!
     midPeak2Coeff = juce::dsp::IIR::Coefficients<float>::makePeakFilter(getSampleRate(), freq_mid_2_, Q_mid_2_, gain_mid_2_);
     highShelfCoeff = juce::dsp::IIR::Coefficients<float>::makeHighShelf(getSampleRate(), freq_high_, Q_high_, gain_high_);
 
-    *filterChain.get<0>().coefficients = *lowShelfCoeff;
-    *filterChain.get<1>().coefficients = *midPeak1Coeff;
-    *filterChain.get<2>().coefficients = *midPeak2Coeff;
-    *filterChain.get<3>().coefficients = *highShelfCoeff;
+    *filterChainL.get<0>().coefficients = *lowShelfCoeff;
+    *filterChainL.get<1>().coefficients = *midPeak1Coeff;
+    *filterChainL.get<2>().coefficients = *midPeak2Coeff;
+    *filterChainL.get<3>().coefficients = *highShelfCoeff;
+
+    *filterChainR.get<0>().coefficients = *lowShelfCoeff;
+    *filterChainR.get<1>().coefficients = *midPeak1Coeff;
+    *filterChainR.get<2>().coefficients = *midPeak2Coeff;
+    *filterChainR.get<3>().coefficients = *highShelfCoeff;
 }
 
 //==============================================================================
