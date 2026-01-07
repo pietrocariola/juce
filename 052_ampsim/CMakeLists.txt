@@ -85,6 +85,9 @@ target_link_libraries(${PROJECT_NAME}
 
 	# Biblioteca com funções de DSP
 	juce::juce_dsp             
+
+	# Biblioteca para formato de audio WavAudioFormat
+	juce::juce_audio_formats
     PUBLIC
         # configuracoes de link-time optimization e warnings
         juce::juce_recommended_config_flags
