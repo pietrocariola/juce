@@ -53,8 +53,6 @@ MyAudioProcessor::MyAudioProcessor()
     auto& waveshaper = filterChain.get<4>();
     waveshaper.functionToUse = [](float x) { return (float)(std::copysign(1.0, x) * (1 - 0.25 / (std::fabs(x) + 0.25))); };
 
-    prepareIR();
-
     apvts.state.addListener(this);
     
     createPrograms();
@@ -66,32 +64,26 @@ MyAudioProcessor::~MyAudioProcessor()
     apvts.state.removeListener(this);
 }
 
-void MyAudioProcessor::prepareIR()
-{
-    juce::WavAudioFormat format;
-
-    for (int i = 0; i < 3; i++)
-    {
-        // tem que ser no heap porque o reader vai destrui-lo depois do uso
-        juce::MemoryInputStream* inputStream = new juce::MemoryInputStream(IR[i], IR_BYTES, false);
-        // "true" no final indica que reader deve destruir o stream no final
-        // unique_ptr cuida de destruir o reader no final do escopo
-        std::unique_ptr<juce::AudioFormatReader> reader = std::unique_ptr<juce::AudioFormatReader>(format.createReaderFor(inputStream, true));
-
-        if (reader != nullptr)
-        {
-            long int samples = reader->lengthInSamples;
-            IRBlock[i].allocate(samples, true);
-            *IRBlock[i] = juce::AudioBuffer<float>(1, samples);
-            reader->read(IRBlock[i], 0, samples, 0, true, true);
-        }
-    }
-}
-
 void MyAudioProcessor::loadIR()
 {
     auto& convolution = filterChain.get<6>();
-    convolution.loadImpulseResponse(IRBlock[irIndex], IR_SIZE, juce::dsp::Convolution::Stereo::no, juce::dsp::Convolution::Trim::yes, 0);
+    static const unsigned char* ir;
+    uint32_t ir_size = 0;
+
+    if (irIndex == 0) { //JZ120
+        ir = IR_JZ120;
+        ir_size = IR_JZ120_BYTES;
+    }
+    else if (irIndex == 1) { //AC30
+        ir = IR_AC30;
+        ir_size = IR_AC30_BYTES;
+    }
+    else { //JCM900
+        ir = IR_JCM900;
+        ir_size = IR_JCM900_BYTES;
+    }
+
+    convolution.loadImpulseResponse(ir, ir_size, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0);
 }
 
 //==============================================================================
@@ -303,7 +295,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
     layout.add(std::make_unique<juce::AudioParameterChoice>(
         ParamID::ir,
         "IR",
-        juce::StringArray { "TwinVerb212", "GB412", "JZ120" }, 
+        //juce::StringArray { "TwinVerb212", "GB412", "JZ120" }, 
+        juce::StringArray { "JZ120", "AC30", "JCM900" }, 
         0));
 
     return layout;

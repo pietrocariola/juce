@@ -5,3 +5,6 @@ white_noise_gain/
 fake_sidechain/
 */build/
 .vscode/
+*/cmake/
+.DS_Store
+

@@ -179,9 +179,6 @@ private:
     // Define coeficientes para todos os filtros
     void setCoeffs();
 
-    // Preparar IRs no formato correto
-    void prepareIR();
-
     // Carrega IR
     void loadIR();
     
