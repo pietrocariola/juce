@@ -113,6 +113,7 @@ private:
     //------------------------------------------------------------------------------
     std::unique_ptr<juce::TextButton> loadButton;
     
+    juce::dsp::ProcessSpec spec;
     juce::dsp::Convolution convolution;
     juce::dsp::DryWetMixer<float> mixer;
 

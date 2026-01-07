@@ -15,7 +15,7 @@ MyAudioProcessor::MyAudioProcessor()
         .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
 {
     //TODO: inicializacao dos parametros do plugin
-    wet_dry_mix_ = 0.0f; //fully dry
+    wet_dry_mix_ = 0.5f; //50%
 
     castParameter(apvts, ParamID::wet_dry, wetDryMixParam);
     
@@ -39,15 +39,15 @@ MyAudioProcessor::~MyAudioProcessor()
 // TODO: funcao que roda logo ANTES de começar a processar
 void MyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) 
 {
-    juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = (unsigned int)samplesPerBlock;
     spec.numChannels = (unsigned int)getTotalNumInputChannels();
 
+    convolution.reset();
     convolution.prepare(spec);
     
     mixer.prepare(spec);
-    mixer.setMixingRule(juce::dsp::DryWetMixingRule::linear);
+    mixer.setMixingRule(juce::dsp::DryWetMixingRule::balanced);
     mixer.setWetMixProportion(wet_dry_mix_);
 }
 
@@ -106,7 +106,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyAudioProcessor::createPara
         "Dry/Wet Mix",
         0.0f,
         1.0f, 
-        0.0f));
+        0.5f));
 
     return layout;
 }

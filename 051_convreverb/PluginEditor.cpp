@@ -19,7 +19,7 @@ MyAudioProcessorEditor::MyAudioProcessorEditor (MyAudioProcessor& p, juce::Audio
     wetDryAttachment.reset(new juce::AudioProcessorValueTreeState::SliderAttachment(apvts, "wet_dry", wetDrySlider));
 
     // Define o tamanho do editor
-    setSize (400, 300);
+    setSize (400, 150);
 }
 
 MyAudioProcessorEditor::~MyAudioProcessorEditor() {}

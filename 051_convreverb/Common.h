@@ -22,9 +22,7 @@ bool MyAudioProcessor::hasEditor() const { return true; }
 // Cria editor generico
 juce::AudioProcessorEditor* MyAudioProcessor::createEditor() 
 { 
-    auto editor = new juce::GenericAudioProcessorEditor(*this);
-    editor->setSize(500, 500);
-    return editor;
+    return new MyAudioProcessorEditor(*this, apvts);
 }
 //==============================================================================
 
