@@ -175,7 +175,7 @@ void MyAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Midi
             // Update the LFO phase, keeping it in the range 0-1
             ph += frequency_ * inverseSampleRate_;
             if(ph >= 1.0f)
-                ph -= 1.0;
+                ph -= 1.0f;
         }
     }
     
